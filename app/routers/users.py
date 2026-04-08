@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -22,3 +22,14 @@ def crear_usuario(user: UsuarioCreate, db: Session = Depends(get_db)):
     db.refresh(nuevo_usuario)
 
     return nuevo_usuario
+
+def obtener_usuarios(db: Session = Depends(get_db)):
+    return db.query(Usuario).all()
+
+@router.post("/login")
+def inicioSesion(email: str, password: str, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.email == email).first()
+    if not usuario or usuario.password_hash != password:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    return {"message": "Inicio de sesión exitoso", "usuario": usuario}
+
