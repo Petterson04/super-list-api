@@ -14,7 +14,7 @@ router = APIRouter(prefix="/productos", tags=["Productos"])
 @router.post("/")
 def agregar_producto(
     prod: ProductoCreate,
-    user_id: int = Depends(get_current_user),
+    user_id: int = Depends(au.get_current_user),
     db: Session = Depends(get_db)
 ):
 
