@@ -7,6 +7,7 @@ from app.models.models import Usuario
 from app.schemas.schemas import UsuarioCreate, LoginRequest, TokenResponse
 from app.auth.auth import (
     ALGORITHM,
+    SECRET_KEY,
     hash_password,
     verify_password,
     create_access_token
@@ -60,23 +61,3 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 
     return {"access_token": token}
 
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer
-from jose import jwt, JWTError
-
-security = HTTPBearer()
-
-
-def get_current_user(token=Depends(security)):
-
-    try:
-        payload = jwt.decode(
-            token.credentials,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
-        )
-
-        return payload["user_id"]
-
-    except JWTError:
-        raise HTTPException(401, "Token inválido")
