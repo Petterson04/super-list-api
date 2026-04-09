@@ -4,14 +4,27 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.models import ProductoLista
 from app.schemas.schemas import ProductoCreate, ProductoResponse
+from app.routers import auth as au
+from app.auth.auth import get_current_user
+
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
 
-@router.post("/", response_model=ProductoResponse)
-def agregar_producto(prod: ProductoCreate, db: Session = Depends(get_db)):
+@router.post("/")
+def agregar_producto(
+    prod: ProductoCreate,
+    user_id: int = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
 
-    nuevo_producto = ProductoLista(**prod.dict())
+    nuevo_producto = ProductoLista(
+        nombre_producto=prod.nombre_producto,
+        cantidad=prod.cantidad,
+        tienda=prod.tienda,
+        lista_id=prod.lista_id,
+        agregado_por=user_id
+    )
 
     db.add(nuevo_producto)
     db.commit()
