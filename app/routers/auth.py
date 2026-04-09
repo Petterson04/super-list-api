@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+import os
 
 from app.database import get_db
 from app.models.models import Usuario
@@ -12,7 +13,7 @@ from app.auth.auth import (
 )
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
-
+secret_key = os.getenv("SECRET_KEY")
 
 # ======================
 # REGISTER
