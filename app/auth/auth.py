@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
 import os
+import hashlib
 
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
 ALGORITHM = "HS256"
@@ -14,11 +15,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # PASSWORD HASH
 # ======================
 def hash_password(password: str):
-    return pwd_context.hash(password)
+    # pre-hash SHA256 (sin perder seguridad)
+    sha = hashlib.sha256(password.encode()).hexdigest()
+    return pwd_context.hash(sha)
 
-
-def verify_password(plain, hashed):
-    return pwd_context.verify(plain, hashed)
+def verify_password(plain: str, hashed: str):
+    sha = hashlib.sha256(plain.encode()).hexdigest()
+    return pwd_context.verify(sha, hashed)
 
 
 # ======================

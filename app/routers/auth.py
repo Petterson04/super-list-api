@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import os
+import hashlib
 
 from app.database import get_db
 from app.models.models import Usuario
