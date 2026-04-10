@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 import os
 import hashlib
 
-SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 días
 
